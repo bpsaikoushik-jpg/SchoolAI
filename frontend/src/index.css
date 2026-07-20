@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: toggling `.dark` on <html> flips every dark: utility */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Brand ramp (blue -> emerald), inherited from the marketing site */
+  --color-brand-50: #eef6ff;
+  --color-brand-100: #d9ebff;
+  --color-brand-200: #b7d9ff;
+  --color-brand-300: #86bfff;
+  --color-brand-400: #4f9dff;
+  --color-brand-500: #2f7bff;
+  --color-brand-600: #1d5bef;
+  --color-brand-700: #1a47c4;
+  --color-brand-800: #1c3c9b;
+  --color-brand-900: #1c357c;
+
+  --color-mint-400: #34d8a6;
+  --color-mint-500: #14b88a;
+  --color-mint-600: #0d9a72;
+
+  /* Role signature accents — each portal gets a quiet identity */
+  --color-role-student: #3b82f6;
+  --color-role-teacher: #8b5cf6;
+  --color-role-parent: #f59e0b;
+  --color-role-principal: #14b88a;
+  --color-role-founder: #f43f5e;
+
+  --animate-blob: blob 7s infinite;
+  --animate-in: fadeIn 0.4s ease-out;
+}
+
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -30px) scale(1.1); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animation-delay-2000 { animation-delay: 2s; }
+
+/* ---- Surface tokens: swapped by the `.dark` class on <html> ---- */
+:root {
+  color-scheme: light;
+  --surface-canvas: #f6f7fb;
+  --surface-raised: #ffffff;
+  --surface-sunken: #eef0f5;
+  --surface-overlay: #ffffff;
+  --border-subtle: #e4e7ee;
+  --border-strong: #d3d7e2;
+  --text-primary: #0f172a;
+  --text-secondary: #55607a;
+  --text-muted: #8b93a7;
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.dark {
+  color-scheme: dark;
+  --surface-canvas: #0a0d14;
+  --surface-raised: #121722;
+  --surface-sunken: #0d111a;
+  --surface-overlay: #161c29;
+  --border-subtle: #1f2635;
+  --border-strong: #2b3346;
+  --text-primary: #f2f4f8;
+  --text-secondary: #99a2b8;
+  --text-muted: #636d84;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.24), 0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+@theme inline {
+  --color-canvas: var(--surface-canvas);
+  --color-raised: var(--surface-raised);
+  --color-sunken: var(--surface-sunken);
+  --color-overlay: var(--surface-overlay);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font-sans);
+  background-color: var(--surface-canvas);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+* {
+  border-color: var(--border-subtle);
+}
+
+::selection {
+  background: var(--color-brand-500);
+  color: white;
+}
+
+/* Slim, unobtrusive scrollbars for panels */
+.scroll-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scroll-thin::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
+.scroll-thin::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
