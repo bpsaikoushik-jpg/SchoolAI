@@ -6,9 +6,14 @@ python - <<'PYEOF'
 import os
 import socket
 import time
+import urllib.parse
 
-host = os.getenv("POSTGRES_HOST", "db")
-port = int(os.getenv("POSTGRES_PORT", "5432"))
+database_url = os.getenv("DATABASE_URL")
+
+parsed = urllib.parse.urlparse(database_url)
+
+host = parsed.hostname
+port = parsed.port or 5432
 
 for attempt in range(30):
     try:
