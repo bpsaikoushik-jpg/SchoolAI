@@ -36,15 +36,13 @@ class Settings(BaseSettings):
     AI_MAX_RETRIES: int = int(os.getenv("AI_MAX_RETRIES", "2"))
     AI_RETRY_BACKOFF_SECONDS: float = float(os.getenv("AI_RETRY_BACKOFF_SECONDS", "1.0"))
     AI_MAX_OUTPUT_TOKENS: int = int(os.getenv("AI_MAX_OUTPUT_TOKENS", "1200"))
-
-DATABASE_URL: str = os.getenv("DATABASE_URL", "")
-
-if DATABASE_URL.startswith("postgresql://"):
-    DATABASE_URL = DATABASE_URL.replace(
-        "postgresql://",
-        "postgresql+asyncpg://",
-        1
-    )
+    DATABASE_URL: str = os.getenv("DATABASE_URL", "")
+    if DATABASE_URL.startswith("postgresql://"):
+        DATABASE_URL = DATABASE_URL.replace(
+            "postgresql://",
+            "postgresql+asyncpg://",
+            1
+        )
 
     # Comma-separated list of allowed origins, e.g. "https://app.schoolai.com,https://admin.schoolai.com"
     # Defaults to "*" for local/dev convenience. The API is Bearer-token authenticated
