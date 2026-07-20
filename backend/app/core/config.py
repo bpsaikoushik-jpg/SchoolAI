@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     AI_MAX_OUTPUT_TOKENS: int = int(os.getenv("AI_MAX_OUTPUT_TOKENS", "1200"))
     DATABASE_URL: str = os.getenv("DATABASE_URL", "")
     @property
-    def ASYNC_DATABASE_URL(self) -> str: 
+    def ASYNC_DATABASE_URL(self) -> str:
         url = self.DATABASE_URL
         if url.startswith("postgresql://"):
             url = url.replace(
@@ -46,6 +46,11 @@ class Settings(BaseSettings):
                 "postgresql+asyncpg://",
                 1,
             )
+        url = url.replace("?sslmode=require&channel_binding=require", "")
+        url = url.replace("&sslmode=require", "")
+        url = url.replace("?sslmode=require", "")
+        url = url.replace("&channel_binding=require", "")
+        url = url.replace("?channel_binding=require", "")
         return url
 
     # Comma-separated list of allowed origins, e.g. "https://app.schoolai.com,https://admin.schoolai.com"
