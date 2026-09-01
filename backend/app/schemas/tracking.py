@@ -1,13 +1,23 @@
 from uuid import UUID
 from typing import Optional
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
 
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+
+# ------------------------------------------------------------------
+# Attendance
+# ------------------------------------------------------------------
 
 class AttendanceBase(BaseModel):
     student_id: UUID
     date: datetime
     status: str = Field(pattern="^(present|absent|late)$")
+
+    @field_validator("status", mode="before")
+    @classmethod
+    def normalize_status(cls, value):
+        return str(value).lower()
 
 
 class AttendanceCreate(AttendanceBase):
@@ -18,8 +28,13 @@ class AttendanceOut(AttendanceBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
     model_config = ConfigDict(from_attributes=True)
 
+
+# ------------------------------------------------------------------
+# Homework
+# ------------------------------------------------------------------
 
 class HomeworkBase(BaseModel):
     class_id: UUID
@@ -42,8 +57,13 @@ class HomeworkOut(HomeworkBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
     model_config = ConfigDict(from_attributes=True)
 
+
+# ------------------------------------------------------------------
+# Submission
+# ------------------------------------------------------------------
 
 class SubmissionBase(BaseModel):
     homework_id: UUID
@@ -64,8 +84,13 @@ class SubmissionOut(SubmissionBase):
     grade: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+
     model_config = ConfigDict(from_attributes=True)
 
+
+# ------------------------------------------------------------------
+# Exam
+# ------------------------------------------------------------------
 
 class ExamBase(BaseModel):
     subject_id: UUID
@@ -86,8 +111,13 @@ class ExamOut(ExamBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
     model_config = ConfigDict(from_attributes=True)
 
+
+# ------------------------------------------------------------------
+# Result
+# ------------------------------------------------------------------
 
 class ResultBase(BaseModel):
     exam_id: UUID
@@ -109,20 +139,32 @@ class ResultOut(ResultBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+
     model_config = ConfigDict(from_attributes=True)
 
 
+# ------------------------------------------------------------------
+# Detailed Result
+# ------------------------------------------------------------------
+
 class ResultDetailOut(BaseModel):
-    """Enriched result row (joins exam title + subject name) used by the
-    Parent Portal's Results/Performance pages, which have no other way to
-    resolve exam metadata for a bare student_id/exam_id result list."""
+    """
+    Enriched result row joining exam and subject information.
+    Used by Parent Portal Results/Performance pages.
+    """
+
     id: UUID
     exam_id: UUID
     student_id: UUID
     score: Optional[float] = None
     remarks: Optional[str] = None
+
     exam_title: str
     exam_date: Optional[datetime] = None
+
     subject_id: UUID
     subject_name: str
+
     created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
