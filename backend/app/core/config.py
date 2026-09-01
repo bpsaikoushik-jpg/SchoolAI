@@ -3,10 +3,13 @@ from typing import List
 import os
 
 
-class Settings:
+class Settings(BaseSettings):
     PROJECT_NAME: str = "SchoolAI"
     API_V1_STR: str = "/api/v1"
 
+    # ------------------------------------------------------------------
+    # Security / JWT
+    # ------------------------------------------------------------------
     SECRET_KEY: str = os.getenv(
         "JWT_SECRET",
         "super_secret_change_me_in_production"
@@ -15,14 +18,18 @@ class Settings:
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
 
     # ------------------------------------------------------------------
-    # AI Provider Layer
+    # AI Provider Layer - GEMINI ONLY
     # ------------------------------------------------------------------
-    # Gemini is the ONLY AI provider.
+    AI_PROVIDER: str = os.getenv("AI_PROVIDER", "gemini")
+    AI_FALLBACK_PROVIDERS: List[str] = []
+
     GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
+
     GEMINI_MODEL: str = os.getenv(
         "GEMINI_MODEL",
         "gemini-3.6-flash"
     )
+
     GEMINI_BASE_URL: str = os.getenv(
         "GEMINI_BASE_URL",
         "https://generativelanguage.googleapis.com/v1beta"
@@ -31,12 +38,15 @@ class Settings:
     AI_REQUEST_TIMEOUT_SECONDS: float = float(
         os.getenv("AI_REQUEST_TIMEOUT_SECONDS", "30")
     )
+
     AI_MAX_RETRIES: int = int(
         os.getenv("AI_MAX_RETRIES", "2")
     )
+
     AI_RETRY_BACKOFF_SECONDS: float = float(
         os.getenv("AI_RETRY_BACKOFF_SECONDS", "1.0")
     )
+
     AI_MAX_OUTPUT_TOKENS: int = int(
         os.getenv("AI_MAX_OUTPUT_TOKENS", "1200")
     )
@@ -71,7 +81,6 @@ class Settings:
     # ------------------------------------------------------------------
     # CORS
     # ------------------------------------------------------------------
-    # Comma-separated list of allowed origins.
     CORS_ORIGINS: List[str] = [
         o.strip()
         for o in os.getenv("CORS_ORIGINS", "*").split(",")
