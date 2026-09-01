@@ -30,9 +30,11 @@ class GeminiProvider(BaseAIProvider):
         payload = {
             "contents": contents,
             "generationConfig": {
-                "temperature": kwargs.get("temperature", 0.4),
-                "maxOutputTokens": kwargs.get("max_tokens", settings.AI_MAX_OUTPUT_TOKENS),
-            },
+    "maxOutputTokens": kwargs.get(
+        "max_tokens",
+        settings.AI_MAX_OUTPUT_TOKENS
+    ),
+},
         }
         if system_instruction:
             payload["systemInstruction"] = {"parts": [{"text": system_instruction}]}
